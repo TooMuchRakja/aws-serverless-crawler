@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless Crawler Application
+
+Resources:
+  CrawlerQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: CrawlerQueue
+
+  CrawlerTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: CrawlerData
+      AttributeDefinitions:
+        - AttributeName: VisitedURL
+          AttributeType: S  
+        - AttributeName: runId
+          AttributeType: S  
+      KeySchema:
+        - AttributeName: VisitedURL
+          KeyType: HASH  
+        - AttributeName: runId
+          KeyType: RANGE  
+      BillingMode: PAY_PER_REQUEST  
+
+  InitializerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: initializer.handler  
+      Runtime: python3.10  
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref CrawlerTable  
+
+  CrawlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: crawler.handler  
+      Runtime: python3.10  
+      Environment:
+        Variables:
+          DYNAMODB_TABLE: !Ref CrawlerTable 
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref CrawlerTable  
+      Events:
+        SQSQueueEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt CrawlerQueue.Arn  
+
