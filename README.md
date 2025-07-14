@@ -1,4 +1,8 @@
-🕷 Serverless Web Crawler (AWS Lambda + DynamoDB + SQS)
+🧭 Note:
+For best viewing of the project structure and file tree, please use the "Code" tab on GitHub.
+🇵🇱 [Polska wersja](README.pl.md) dostępna tutaj.
+
+🕷 Serverless Web Crawler (AWS Lambda + DynamoDB + SQS) 
 A serverless web crawler based on AWS services, written in Python. It allows you to analyze and index websites starting from a provided root URL. It recursively visits all related internal pages and extracts links into a DynamoDB table.
 
 📦 Requirements
