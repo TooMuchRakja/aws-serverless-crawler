@@ -1,5 +1,5 @@
-import uuid # importujemy sobie uuid do tworzenia randomowych id 
-from models.visitedURLS import visitedURL # importujemy sobie zdefiniowaną klasę z parametrami tabeli dynamo db
+import uuid 
+from models.visitedURLS import visitedURL 
 import json 
 
 
@@ -20,10 +20,10 @@ def wsad_do_kolejki(kolejka_sqs, urls, runID, sourceURL, root_URL): # funkcja na
 			'VisitedURL' : item, 
 			'runId' : runID,
 			'sourceURL' : sourceURL,
-			'root_URL' : root_URL # pierwszy elemnt tutaj to klucz więc zawsze musi być spójny z tabelą Dynamo, wszystkie klucze na zielono mają być identyczne jak w tabeli !!!!
-		} # tworzymy sobie słownik z obiektów po których iterujemy 
+			'root_URL' : root_URL # pierwszy element tutaj to klucz więc zawsze musi być spójny z tabelą Dynamo, wszystkie klucze na zielono mają być identyczne jak w tabeli
+		} 
 		obiekty.append(item)
-	partiaObiektow = [] # tworzymy sobie pustą listę która będzie przyjmowąc partie po 10 obetków 
+	partiaObiektow = [] 
 	rozmiarPartii = 10 # rozmiar partii 10 - tyle maksymalnie przyjmie sqs 
 
 	for i in range(0, len(obiekty), rozmiarPartii): # iterujemy w zakresie od 0 do wszystkich wyników powyższej iteracji
@@ -31,7 +31,7 @@ def wsad_do_kolejki(kolejka_sqs, urls, runID, sourceURL, root_URL): # funkcja na
 		partiaObiektow.append(obiekty[i:i+rozmiarPartii])
 	print (f'Skonstruowana partia wynosi {len(partiaObiektow)} partii o łącznej sumie obiektów wynoszącej {len(obiekty)} ')
 
-	# teraz stworzymy mechaniz który będzie przesyłał wszystkie partie po 10 obiektów do sqs 
+	# teraz stworzymy mechanizm który będzie przesyłał wszystkie partie po 10 obiektów do sqs 
 
 	numer_partii = 0 # rozpoczynamy od numeru 0 
 	for partia in partiaObiektow: # iterujemy po każdej partii 
